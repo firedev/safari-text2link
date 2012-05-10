@@ -1,0 +1,83 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>global HTML page</title>
+    <script type="text/javascript">
+      (function () {
+        function sendSettings(event) {
+          var page;
+          if (event && event.target && event.target.page)
+            page = event.target.page;
+          else 
+            page = safari.application.activeBrowserWindow.activeTab.page;
+
+          var settings = {
+            openLinkInCurrentTab: safari.extension.settings.getItem('openLinkInCurrentTab'),
+            openLinkInNewTab: safari.extension.settings.getItem('openLinkInNewTab'),
+            openLinkInNewWindow: safari.extension.settings.getItem('openLinkInNewWindow')
+          };
+
+          page.dispatchMessage('settings', settings);
+        }
+
+        function openLink(event) {
+          var message = event.message;
+
+          var w;
+          if (message.newTab)
+            w = safari.application.activeBrowserWindow.openTab('foreground');
+          else if (message.newWindow) {
+            var ww = safari.application.openBrowserWindow();
+            w = ww.activeTab;
+          } else
+            w = safari.application.activeBrowserWindow.activeTab;
+
+          w.url = message.link;
+        }
+
+        function onMessage(event) {
+          switch (event.name) {
+            case 'getGettings':
+              sendSettings(event);
+              break;
+            case 'openLink':
+              openLink(event);
+              break;
+          }
+        }
+
+        function onContextMenu(event) {
+          if (!event['userInfo'])
+            return;
+          event.contextMenu.appendContextMenuItem('openInThisTab', 'Open Link');
+          event.contextMenu.appendContextMenuItem('openInNewTab', 'Open Link in New Tab');
+          event.contextMenu.appendContextMenuItem('openInNewWindow', 'Open Link in New Window');
+//          event.contextMenu.appendContextMenuItem('copyLink', 'Copy Link');
+        }
+
+        function performCommand(event) {
+          var ev = {message: {}};
+          ev.message.link = event.userInfo;
+          switch (event.command) {
+            case 'openInThisTab':
+              break;
+            case 'openInNewTab':
+              ev.message.newTab = true;
+              break;
+            case 'openInNewWindow':
+              ev.message.newWindow = true;
+              break;
+          }
+          openLink(ev);
+        }
+
+        safari.application.addEventListener('message', onMessage, false);
+        safari.application.addEventListener('contextmenu', onContextMenu, false);
+        safari.application.addEventListener("command", performCommand, false);
+        safari.extension.settings.addEventListener('change', sendSettings, false);
+      })();
+    </script>
+  </head>
+  <body>
+  </body>
+</html>

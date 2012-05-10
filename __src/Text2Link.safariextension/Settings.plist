@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>DefaultValue</key>
+		<real>2</real>
+		<key>Key</key>
+		<string>openLinkInCurrentTab</string>
+		<key>Title</key>
+		<string>Open link in current tab</string>
+		<key>Titles</key>
+		<array>
+			<string>Never</string>
+			<string>On double click</string>
+			<string>On Cmd + double click</string>
+			<string>On Option + double click</string>
+			<string>On Shift + double click</string>
+		</array>
+		<key>Type</key>
+		<string>PopUpButton</string>
+		<key>Values</key>
+		<array>
+			<real>1</real>
+			<real>2</real>
+			<real>3</real>
+			<real>4</real>
+			<real>5</real>
+		</array>
+	</dict>
+	<dict>
+		<key>DefaultValue</key>
+		<real>3</real>
+		<key>Key</key>
+		<string>openLinkInNewTab</string>
+		<key>Title</key>
+		<string>Open link in new tab</string>
+		<key>Titles</key>
+		<array>
+			<string>Never</string>
+			<string>On double click</string>
+			<string>On Cmd + double click</string>
+			<string>On Option + double click</string>
+			<string>On Shift + double click</string>
+		</array>
+		<key>Type</key>
+		<string>PopUpButton</string>
+		<key>Values</key>
+		<array>
+			<real>1</real>
+			<real>2</real>
+			<real>3</real>
+			<real>4</real>
+			<real>5</real>
+		</array>
+	</dict>
+	<dict>
+		<key>DefaultValue</key>
+		<real>1</real>
+		<key>Key</key>
+		<string>openLinkInNewWindow</string>
+		<key>Title</key>
+		<string>Open link in new window</string>
+		<key>Titles</key>
+		<array>
+			<string>Never</string>
+			<string>On double click</string>
+			<string>On Cmd + double click</string>
+			<string>On Option + double click</string>
+			<string>On Shift + double click</string>
+		</array>
+		<key>Type</key>
+		<string>PopUpButton</string>
+		<key>Values</key>
+		<array>
+			<real>1</real>
+			<real>2</real>
+			<real>3</real>
+			<real>4</real>
+			<real>5</real>
+		</array>
+	</dict>
+</array>
+</plist>

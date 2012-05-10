@@ -1,0 +1,193 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<title>Text2Link test page</title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<script type="text/javascript" src="../text2link.js"></script>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/prototype/1.6.1.0/prototype.js"></script>
+		<script type="text/javascript" src="unittest.js"></script>
+		<link rel="stylesheet" href="test.css" type="text/css" />
+	</head>
+	<body>
+		<h1>Text2Link test page</h1>
+
+		<!-- Log output -->
+		<div id="testlog"> </div>
+
+		<!-- Tests follow -->
+		<script type="text/javascript">
+		// <![CDATA[
+			new Test.Unit.Runner({
+				testShrinkToValidLink: function() { with(this) {
+					var str, i;
+
+					str = 'firedev.com';
+					for (i = 0; i < str.length; i++) {
+						assertEqual('firedev.com', Text2Link.shrinkToValidLink(str, i, str.length - i - 1).link);
+					}
+
+					str = 'http://firedev.com';
+					for (i = 0; i < str.length; i++) {
+						assertEqual('http://firedev.com', Text2Link.shrinkToValidLink(str, i, str.length - i - 1).link);
+					}
+
+					str = 'ttp://firedev.com';
+					for (i = 0; i < str.length; i++) {
+						assertEqual('ttp://firedev.com', Text2Link.shrinkToValidLink(str, i, str.length - i - 1).link);
+					}
+
+					str = 'h**p://firedev.com';
+					for (i = 0; i < 3; i++) {
+						assertIdentical(false, Text2Link.shrinkToValidLink(str, i, str.length - i - 1));
+					}
+					for (i = 3; i < str.length; i++) {
+						assertEqual('p://firedev.com', Text2Link.shrinkToValidLink(str, i, str.length - i - 1).link);
+					}
+				}},
+
+				testFixLink: function() { with(this) {
+					assertEqual('http://firedev.com/', Text2Link.fixLink('firedev.com'));
+					assertEqual('http://firedev.com/', Text2Link.fixLink('http://firedev.com'));
+					assertEqual('http://firedev.com/', Text2Link.fixLink('ttp://firedev.com'));
+					assertEqual('http://firedev.com/', Text2Link.fixLink('p://firedev.com'));
+				}},
+
+				testTicket142: function() { with(this) {
+					var str, i;
+
+					// Mozilla(http://www.mozilla.org/)
+					str = 'Mozilla(http://www.mozilla.org/)';
+					for (i = 0; i < 8; i++) {
+						assertIdentical(false, Text2Link.shrinkToValidLink(str, i, str.length - i - 1));
+					}
+					for (i = 8; i < str.length - 1; i++) {
+						assertEqual('http://www.mozilla.org/', Text2Link.shrinkToValidLink(str, i, str.length - i - 1).link);
+					}
+					for (i = str.length - 1; i < str.length; i++) {
+						assertIdentical(false, Text2Link.shrinkToValidLink(str, i, str.length - i - 1));
+					}
+					assertEqual('http://www.mozilla.org/', Text2Link.fixLink('http://www.mozilla.org/'));
+
+					// Netscape(http://www.netscape.com/)
+					str = 'Netscape(http://www.netscape.com/)';
+					for (i = 0; i < 9; i++) {
+						assertIdentical(false, Text2Link.shrinkToValidLink(str, i, str.length - i - 1));
+					}
+					for (i = 9; i < str.length - 1; i++) {
+						assertEqual('http://www.netscape.com/', Text2Link.shrinkToValidLink(str, i, str.length - i - 1).link);
+					}
+					for (i = str.length - 1; i < str.length; i++) {
+						assertIdentical(false, Text2Link.shrinkToValidLink(str, i, str.length - i - 1));
+					}
+					assertEqual('http://www.netscape.com/', Text2Link.fixLink('http://www.netscape.com/'));
+
+					// http://www.mozilla.org/src-faq.html#1.
+					str = 'http://www.mozilla.org/src-faq.html#1.';
+					for (i = 0; i < str.length - 1; i++) {
+						assertEqual('http://www.mozilla.org/src-faq.html#1', Text2Link.shrinkToValidLink(str, i, str.length - i - 1).link);
+					}
+					// for (i = str.length - 1; i < str.length; i++) {
+					// 	assertIdentical(false, Text2Link.shrinkToValidLink(str, i, str.length - i - 1));
+					// }
+					assertEqual('http://www.mozilla.org/src-faq.html#1', Text2Link.fixLink('http://www.mozilla.org/src-faq.html#1'));
+
+					// update.mozilla.org.
+					str = 'update.mozilla.org.';
+					for (i = 0; i < str.length - 1; i++) {
+						assertEqual('update.mozilla.org', Text2Link.shrinkToValidLink(str, i, str.length - i - 1).link);
+					}
+					for (i = str.length - 1; i < str.length; i++) {
+						assertIdentical(false, Text2Link.shrinkToValidLink(str, i, str.length - i - 1));
+					}
+					assertEqual('http://update.mozilla.org/', Text2Link.fixLink('update.mozilla.org'));
+
+					// ttp://www.mozilla.org/newlayout/gecko.html
+					str = 'ttp://www.mozilla.org/newlayout/gecko.html';
+					for (i = 0; i < str.length; i++) {
+						assertEqual('ttp://www.mozilla.org/newlayout/gecko.html', Text2Link.shrinkToValidLink(str, i, str.length - i - 1).link);
+					}
+					assertEqual('http://www.mozilla.org/newlayout/gecko.html', Text2Link.fixLink('ttp://www.mozilla.org/newlayout/gecko.html'));
+
+					// ttp://ftp.netscape.com/pub/netscape6/
+					str = 'ttp://ftp.netscape.com/pub/netscape6/';
+					for (i = 0; i < str.length; i++) {
+						assertEqual('ttp://ftp.netscape.com/pub/netscape6/', Text2Link.shrinkToValidLink(str, i, str.length - i - 1).link);
+					}
+					assertEqual('http://ftp.netscape.com/pub/netscape6/', Text2Link.fixLink('ttp://ftp.netscape.com/pub/netscape6/'));
+
+					// www.mozilla.org/products/firefox/
+					str = 'www.mozilla.org/products/firefox/';
+					for (i = 0; i < str.length; i++) {
+						assertEqual('www.mozilla.org/products/firefox/', Text2Link.shrinkToValidLink(str, i, str.length - i - 1).link);
+					}
+					assertEqual('http://www.mozilla.org/products/firefox/', Text2Link.fixLink('www.mozilla.org/products/firefox/'));
+
+					// Firefox(h**p://www.mozilla.com/firefox/)
+					str = 'Firefox(h**p://www.mozilla.com/firefox/)';
+					for (i = 0; i < 11; i++) {
+						assertIdentical(false, Text2Link.shrinkToValidLink(str, i, str.length - i - 1));
+					}
+					for (i = 11; i < str.length - 1; i++) {
+						assertEqual('p://www.mozilla.com/firefox/', Text2Link.shrinkToValidLink(str, i, str.length - i - 1).link);
+					}
+					for (i = str.length - 1; i < str.length; i++) {
+						assertIdentical(false, Text2Link.shrinkToValidLink(str, i, str.length - i - 1));
+					}
+					assertEqual('http://www.mozilla.com/firefox/', Text2Link.fixLink('p://www.mozilla.com/firefox/'));
+
+					// Corporation(h++p://www.mozilla.com/)
+					str = 'Corporation(h++p://www.mozilla.com/)';
+					for (i = 0; i < 15; i++) {
+						assertIdentical(false, Text2Link.shrinkToValidLink(str, i, str.length - i - 1));
+					}
+					for (i = 15; i < str.length - 1; i++) {
+						assertEqual('p://www.mozilla.com/', Text2Link.shrinkToValidLink(str, i, str.length - i - 1).link);
+					}
+					for (i = str.length - 1; i < str.length; i++) {
+						assertIdentical(false, Text2Link.shrinkToValidLink(str, i, str.length - i - 1));
+					}
+					assertEqual('http://www.mozilla.com/', Text2Link.fixLink('p://www.mozilla.com/'));
+				}},
+
+				testTicket145: function() { with(this) {
+					var str, i;
+
+					str = 'Time.at(1000000000)';
+					for (i = 0; i < 7; i++) {
+						assertEqual('Time.at', Text2Link.shrinkToValidLink(str, i, str.length - i - 1).link);
+					}
+					for (i = 7; i < str.length; i++) {
+						assertIdentical(false, Text2Link.shrinkToValidLink(str, i, str.length - i - 1));
+					}
+					assertEqual('http://time.at/', Text2Link.fixLink('Time.at'));
+
+					str = 't.convert_zone("Asia/Calcutta")';
+					for (i = 0; i < str.length; i++) {
+						assertIdentical(false, Text2Link.shrinkToValidLink(str, i, str.length - i - 1));
+					}
+				}},
+
+				testTicket147: function() { with(this) {
+					var str, i;
+
+					str = 'http://✪df.ws/fzx';
+					for (i = 0; i < str.length; i++) {
+						assertEqual('http://✪df.ws/fzx', Text2Link.shrinkToValidLink(str, i, str.length - i - 1).link);
+					}
+					assertEqual('http://xn--df-oiy.ws/fzx', Text2Link.fixLink('http://✪df.ws/fzx'));
+				}},
+
+				testTicket174: function() { with(this) {
+					var str, i;
+
+					str = 'example.com';
+					for (i = 0; i < str.length; i++) {
+						assertEqual('example.com', Text2Link.shrinkToValidLink(str, i, str.length - i - 1).link);
+					}
+					assertEqual('http://example.com/', Text2Link.fixLink('example.com'));
+				}}
+			});
+		// ]]>
+		</script>
+	</body>
+</html>

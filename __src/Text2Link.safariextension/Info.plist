@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Author</key>
+	<string>Artyom Makarov</string>
+	<key>CFBundleDisplayName</key>
+	<string>Text2Link</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.firedev.text2link</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleShortVersionString</key>
+	<string>0.4</string>
+	<key>CFBundleVersion</key>
+	<string>29</string>
+	<key>Chrome</key>
+	<dict>
+		<key>Global Page</key>
+		<string>Global.html</string>
+	</dict>
+	<key>Content</key>
+	<dict>
+		<key>Scripts</key>
+		<dict>
+			<key>End</key>
+			<array>
+				<string>text2link.js</string>
+			</array>
+		</dict>
+	</dict>
+	<key>Description</key>
+	<string>Allows you to open links written in plain text by double clicking on them</string>
+	<key>ExtensionInfoDictionaryVersion</key>
+	<string>1.0</string>
+	<key>Permissions</key>
+	<dict>
+		<key>Website Access</key>
+		<dict>
+			<key>Include Secure Pages</key>
+			<true/>
+			<key>Level</key>
+			<string>All</string>
+		</dict>
+	</dict>
+	<key>Update Manifest URL</key>
+	<string>http://firedev.com/text2link/Text2Link.plist</string>
+	<key>Website</key>
+	<string>http://firedev.com/</string>
+</dict>
+</plist>
